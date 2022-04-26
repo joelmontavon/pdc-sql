@@ -282,7 +282,7 @@ FROM days_covered
   CASE WHEN ROUND(CAST(days_covered AS FLOAT) / CAST(days_in_tx_period AS FLOAT), 4) >= 0.8 THEN 1 ELSE 0 END AS is_adherent
 FROM pdc;
 </code></pre>
-<p>We did it! You can grab all of the code <a href="https://raw.githubusercontent.com/joelmontavon/pdc-sql/main/pdc.sql">here</a>.</p>
+<p>We did it! You can grab all of the <a href="https://raw.githubusercontent.com/joelmontavon/pdc-sql/main/pdc.sql">code</a> or try it in <a href="https://sqlize.online/sql/mssql2019/8a6dca175acf72bb90343c18afee9515/">SQLize</a>.</p>
 </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/languages/sql.min.js"></script>
