@@ -267,7 +267,7 @@ GROUP BY
 ),
 </code></pre>
 <h5>Step 12</h5>
-<p>Calculate the PDC by dividing the days covered by the days in the measurement period and formatted as a percent.</p>
+<p>Calculate the PDC by dividing the days covered by the days in the measurement period and format as a percent.</p>
 <pre><code>pdc AS (SELECT 
   *, 
   FORMAT(CAST(days_covered AS FLOAT) / CAST(days_in_tx_period AS FLOAT), 'P') AS pdc 
@@ -276,7 +276,7 @@ FROM days_covered
 </code></pre>
 <h5>Step 13</h5>
 <p>We are almost done. Now, we apply the PDC threshold of 80% to determine if the patient is adherent.</p>
-<p><i>Note that the PDC threshold of 80% is used for most drug classes. However, this step could be modified to use another threshold. Also, for most implementations, they round the PDC to 4 decimal places.</i></p>
+<p><i>Note that the PDC threshold of 80% is used for most drug classes. However, this step could be modified to use another threshold. Also, for most progams, they round the PDC to 4 decimal places.</i></p>
 <pre><code>SELECT
   *,
   CASE WHEN ROUND(CAST(days_covered AS FLOAT) / CAST(days_in_tx_period AS FLOAT), 4) >= 0.8 THEN 1 ELSE 0 END AS is_adherent
