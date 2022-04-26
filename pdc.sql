@@ -246,7 +246,7 @@ GROUP BY
 Calculate if covered by at covered by at least one drug on each day in the treatment period and then sum up the days covered.
 Note that, for most PDC measures, we are looking if covered by at least one drug on each day in the treatment period.
 There are some measures that look if covered by multiple drugs on each day in the treatment period. For those measures, this step could be modified. 
-Also, if grouped differently, it would be possible to reuse this code to look for concurrent use of multiple durg classes.*/
+Also, if grouped differently, it would be possible to reuse this code to look for concurrent use of multiple drug classes.*/
 
 days_covered AS (
 SELECT 
