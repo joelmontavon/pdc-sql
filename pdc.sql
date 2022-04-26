@@ -32,7 +32,7 @@ For the code below, I used MS SQL Server 2019. If you don't have MS SQL Servier,
 
 /*First, I need to create some data to work with for the tutorial.
 I create a table for the NDCs and their attributes. 
-Note that the drug column is used for identifying overlapping days supply with the same drug. More on that in a bit...*/
+Note that the drug column is used for identifying overlapping days supply with the same drug. Combination products with multiple target drugs should have multiple rows for each fill with one per target medication.*/
 
 CREATE TABLE ndc_list(drug VARCHAR(32), code CHAR(11), description TEXT);
 INSERT INTO ndc_list
@@ -55,7 +55,7 @@ FROM (
 -The SAMEDRUG patient includes overlapping fills of the same drug.
 -The DIFFDRUG patient includes overlapping fills of different drugs.
 -The NONADH patient has a PDC < 80% and not counted as adherent.
--The COMBPROD patient includes overlapping fills between a single ingredient product and a combination product with the same target drug. Note that the drug column only includes the target medication. Combination products with multiple target drugs should have multiple rows for each fill with one per target medication.
+-The COMBPROD patient includes overlapping fills between a single ingredient product and a combination product with the same target drug.
 -The CONCUSE patient has concurrent use of 2 different drugs (i.e., overlapping days supply of different drugs for ≥ 30 days).
 -The IPSD patient's first fill in not 1/1 so the treatment period is not 365 days.
 -The MEASYR patient has days supply that extends beyond the end of the measurement year.*/
@@ -98,7 +98,7 @@ SELECT 'MEASYR', '2022-07-05', '00172375980', 90 UNION ALL
 SELECT 'MEASYR', '2022-10-15', '00172375980', 90;
 
 /*Step 1
-Joins prescription claims with NDC list to pull in drug. As mentioned above, the drug column is used for identifying overlapping days supply with the same drug.
+Join the prescription claims with NDC list to pull in the drug. As mentioned above, the drug column is used for identifying overlapping days supply with the same drug.
 Note the syntax for the WITH queries. The WITH queries are surrounded by parenthesis and separated by commas.
 And, these WITH queries can be referenced in subsequent WITH queries or in the final query.*/
 
@@ -120,7 +120,7 @@ To calculate the PDC, we need to be able to deal with both overlapping days supp
 -For overlapping fills of different drug, we assume that the patient will start his/her new medication right away. 
 
 We need to adjust for overlapping days supply for fills of the same drug but not of different drugs. 
-And, in the next few steps, we will focus on adjusting for overlapping days supply for the same drug. 
+And, in the next few steps, we will focus on adjusting for overlapping days supply of the same drug. 
 First, we determine the running days supply and first date of service for the patient and drug using the SUM() and MIN() window functions.
 Note that the ORDER BY clause is used for the running total. 
 Removing the ORDER BY clause gives you a completely different result. You'll get the total of all rows in the partition instead of the running total.*/
@@ -244,7 +244,7 @@ GROUP BY
 
 /*Step 11
 Calculate if covered by at covered by at least one drug on each day in the treatment period and then sum up the days covered.
-Note, for most PDC measures, we are looking if covered by at least one drug on each day in the treatment period.
+Note that, for most PDC measures, we are looking if covered by at least one drug on each day in the treatment period.
 There are some measures that look if covered by multiple drugs on each day in the treatment period. For those measures, this step could be modified. 
 Also, if grouped differently, it would be possible to reuse this code to look for concurrent use of multiple durg classes.*/
 
@@ -263,8 +263,7 @@ GROUP BY
 ),
 
 /*Step 12
-Calculate the PDC by dividing the days covered by the days in the measurement period.
-I have formatted as a percent.*/
+Calculate the PDC by dividing the days covered by the days in the measurement period and formatted as a percent.*/
 
 pdc AS (SELECT 
   *, 
